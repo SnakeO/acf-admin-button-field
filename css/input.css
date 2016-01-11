@@ -1,0 +1,18 @@
+.acf-button .hidden{
+  display: none;
+}
+
+.acf-button td{
+  padding-right: 10px;
+}
+
+.acf-button label{
+  padding-bottom: 5px;
+  color: #999;
+  display: block;
+}
+
+.acf-button .switch{
+  margin-top: 20px;
+  margin-bottom: 0;
+}
