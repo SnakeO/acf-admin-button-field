@@ -34,6 +34,14 @@ class acf_field_button extends acf_field
 			'version' => '1.0.0'
 		);
 
+		// $this->settings = array(
+		// 	'path' => acf_get_path(__DIR__),
+		// 	'dir' => plugin_dir_url(__FILE__),
+		// 	'version' => '1.0.0'
+
+
+		// );
+
 	}
 	
 	
@@ -55,17 +63,78 @@ class acf_field_button extends acf_field
 		// defaults?
 		$field = array_merge($this->defaults, $field);
 		
-		// key is needed in the field names to correctly save the data
+		// // key is needed in the field names to correctly save the data
 		$key = $field['name'];
-		
+	
 		
 		// Create Field Options HTML
-		
+			?>
+	<tr class="field_option field_option_<?php echo $this->name; ?>">
+			<td class="label">
+				<label><?php _e( "Button Text", 'acf' ); ?></label>
+
+				<p><?php _e( "he text that will appear on the button", 'acf' ) ?></p>
+			</td>
+			<td>
+
+		<?php		
+		do_action( 'acf/create_field', array(
+			// 'label'			=> __('Button Text','acf-button'),
+			// 'instructions'	=> __('The text that will appear on the button','acf-button'),
+			'value'	        => $field['text'],
+			'type'			=> 'text',
+			'name'			=> 'fields[' . $key . '][text]'
+		));	
+		?>
+	        </td>
+			</tr>
+		<tr class="field_option field_option_<?php echo $this->name; ?>">
+			<td class="label">
+				<label><?php _e( "Button Action", 'acf' ); ?></label>
+
+				<p><?php _e( "What happens when you click the button?", 'acf' ) ?></p>
+			</td>
+			<td>
+
+		<?php
+		do_action( 'acf/create_field', array(
+			// 'label'			=> __('Button Action','acf'),
+			// 'instructions'	=> __('What happens when you click the button?','acf'),
+			'type'		=>	'select',
+			'name'		=>	'fields[' . $key . '][button_action]',
+			'choices' 	=>	[
+				'ajax_get'	=> 'AJAX GET Request',
+				'open_url'	=> 'Open a URL'
+			]
+		)); 
+		?>
+
+			</td>
+		</tr>
+		<tr class="field_option field_option_<?php echo $this->name; ?>">
+			<td class="label">
+				<label><?php _e( "URL", 'acf' ); ?></label>
+				<p><?php _e( "Inject ACF vars by using their form name in {brackets}. IE /wp-admin/admin-ajax.php?action=some_action&var={acf[field_5691f90569c3a]}", 'acf' ) ?></p>
+			</td>
+			<td>
+		<?php
+		do_action( 'acf/create_field', array(
+			// 'label'			=> __('URL','acf-button'),
+			// 'instructions'	=> __('Inject ACF vars by using their form name in {brackets}. IE /wp-admin/admin-ajax.php?action=some_action&var={acf[field_5691f90569c3a]}','acf-button'),
+			'value'			=> $field['url'],
+			'type'			=> 'text',
+			'name'			=> 'fields[' . $key . '][url]'
+		));
+		?>
+		</td>
+		</tr>
+
+		<?php
+
 	}
-	
-	
-	/*
-	*  create_field()
+
+
+	/*  create_field()
 	*
 	*  Create the HTML interface for your field
 	*
@@ -78,6 +147,10 @@ class acf_field_button extends acf_field
 	
 	function create_field( $field )
 	{
+
+		//print_r($field);
+
+		
 		$field = array_merge($this->defaults, $field); 
 		$field_name = esc_attr( $field['name'] );
 		$uid = uniqid();
@@ -126,34 +199,28 @@ class acf_field_button extends acf_field
 			var field = <?=json_encode($field)?>;
 			var btn = $('#' + uid);
 			var submitting = false;
-
 			btn.click(function()
 			{
 				if(submitting) {
 					return false;
 				}
-
 				var url = injectVarsIntoURL(field.url);
 				var btn_txt = btn.val();
-
 				if( field.button_action == 'ajax_get' ) 
 				{
 					submitting = true;
 					btn.val('Please Wait...');
-
 					$.get(url, {}, function(res)
 					{
 						submitting = false;
 						alert(res);
 						btn.val(btn_txt);
 					});
-
 				}
 				else if( field.button_action == 'open_url' ) {
 					window.open(url)
 				}
 			});
-
 			function injectVarsIntoURL(url)
 			{
 				var vars = url.match(/{.*?}/g);
@@ -163,7 +230,6 @@ class acf_field_button extends acf_field
 					var val = $('input[name=' + name + ']').val();
 					url = url.replace(placeholder, val);
 				});
-
 				return url;
 			}
 		});
