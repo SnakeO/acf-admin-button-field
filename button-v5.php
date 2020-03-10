@@ -232,7 +232,7 @@ class acf_field_button extends acf_field {
 				var vals = _.each(vars, function(placeholder)
 				{
 					var name = placeholder.substr(1, placeholder.length-2); // ignore opening and closing {brackets}
-					var val = $('input[name=' + name + ']').val();
+					var val = $('input[name="' + name + '"]').val();
 					url = url.replace(placeholder, val);
 				});
 
